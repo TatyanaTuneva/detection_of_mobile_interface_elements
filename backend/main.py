@@ -5,6 +5,7 @@ from fastapi.params import File
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, FileResponse
 from prediction import predict
+import uvicorn
 
 app = FastAPI()
 
@@ -46,3 +47,13 @@ async def get_prediction(image: UploadFile = File(...)) -> Response:
 )
 async def get_time() -> dict:
     return {'time': TIME}
+
+
+if __name__ == '__main__':
+    uvicorn.run("app.main:app",
+                host="0.0.0.0",
+                port=8432,
+                reload=True,
+                ssl_keyfile="./key.pem",
+                ssl_certfile="./cert.pem"
+                )
