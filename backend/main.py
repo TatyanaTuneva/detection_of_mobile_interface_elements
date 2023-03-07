@@ -4,10 +4,14 @@ from fastapi import FastAPI, UploadFile
 from fastapi.params import File
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import Response, FileResponse
+from starlette.staticfiles import StaticFiles
+
 from prediction import predict
 import uvicorn
 
 app = FastAPI()
+
+app.mount("/frontend", StaticFiles(directory="frontend"), name="static")
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
