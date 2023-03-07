@@ -5,7 +5,7 @@ file_prediction_time = $('.file-prediction-time')
 predict_image = $('.predict-image')
 time = $('.time')
 let image_file = 123;
-let server_url = 'http://127.0.0.1:8000'
+let server_url = 'http://164.90.184.183/'
 
 function readURL(input) {
   if (input.files && input.files[0]) {
