@@ -10,6 +10,8 @@ app = FastAPI()
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+TIME = 0
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,8 +35,14 @@ app.add_middleware(
 async def get_prediction(image: UploadFile = File(...)) -> Response:
     request_object_content = await image.read()
     img = io.BytesIO(request_object_content)
-    prediction = predict(img)
-
+    global TIME
+    prediction, TIME = predict(img)
     return Response(content=prediction, media_type="image/png")
 
 
+@app.get(
+    "/get_time/",
+    status_code=200,
+)
+async def get_time() -> dict:
+    return {'time': TIME}

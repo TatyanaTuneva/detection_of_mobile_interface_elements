@@ -1,14 +1,14 @@
 image_upload_wrap = $('.image-upload-wrap')
 file_upload_input = $('.file-upload-input')
 file_upload_image = $('.file-upload-image')
+file_prediction_time = $('.file-prediction-time')
 predict_image = $('.predict-image')
 time = $('.time')
 let image_file = 123;
-let start
+let server_url = 'http://127.0.0.1:8000'
 
 function readURL(input) {
   if (input.files && input.files[0]) {
-    start = new Date().getTime();
     var reader = new FileReader();
 
     reader.onload = function(e) {
@@ -19,7 +19,7 @@ function readURL(input) {
       file_upload_image.attr('src', e.target.result);
 
       file_upload_image.show();
-      let url = 'http://127.0.0.1:8000/get_prediction/'
+      let url = server_url + '/get_prediction/'
       var form_data = new FormData();
       form_data.append('image', image_file)
 
@@ -28,7 +28,7 @@ function readURL(input) {
         body: form_data,
       }).then((response) => {
         return response;
-      }).then((data) => {handleResult(data);})
+      }).then((data) => {handleResult(data);}).then(() => {get_time();})
 
     };
 
@@ -47,7 +47,19 @@ async function handleResult(data) {
     predict_image.show();
   }
   reader.readAsDataURL(imageBlob);
+}
 
-  let prediction_time = new Date().getTime() - start;
+
+async function get_time() {
+  let url = server_url + '/get_time/'
+  fetch(url, {
+        method: 'GET'
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {handleTime(data);})
+}
+
+async function handleTime(data) {
+  let prediction_time = data['time'];
   time.text(prediction_time + ' ms')
 }
